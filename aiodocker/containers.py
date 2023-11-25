@@ -153,6 +153,12 @@ class DockerContainer:
         async with cm as response:
             return await multiplexed_result_list(response, is_tty=is_tty)
 
+    async def get_top(self, ps_args="-ef"):
+        data = self.docker._query_json(
+            f"containers/{self._id}/top", method="GET", params={"ps_args": ps_args}
+        )
+        return data
+
     async def get_archive(self, path: str) -> tarfile.TarFile:
         async with self.docker._query(
             f"containers/{self._id}/archive",
